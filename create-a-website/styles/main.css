@@ -1,0 +1,384 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+    max-width: 150px;
+    margin-bottom: 1rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+header .tagline {
+    font-size: 1.1rem;
+    font-style: italic;
+    opacity: 0.95;
+}
+
+/* Navigation Styles */
+nav {
+    background-color: #1e3a8a;
+    padding: 0;
+    margin-top: 1.5rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #3b82f6;
+}
+
+nav ul li a.active {
+    background-color: #3b82f6;
+    font-weight: bold;
+    border-bottom: 3px solid white;
+}
+
+/* Hamburger Menu */
+#menu-toggle {
+    display: none;
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    padding: 1rem;
+    position: relative;
+    user-select: none;
+}
+
+.menu-icon .hamburger {
+    background: white;
+    display: block;
+    height: 3px;
+    position: relative;
+    width: 30px;
+    transition: background 0.3s;
+}
+
+.menu-icon .hamburger:before,
+.menu-icon .hamburger:after {
+    background: white;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.menu-icon .hamburger:before {
+    top: -10px;
+}
+
+.menu-icon .hamburger:after {
+    top: 10px;
+}
+
+/* X icon when menu is open */
+#menu-toggle:checked ~ .menu-icon .hamburger {
+    background: transparent;
+}
+
+#menu-toggle:checked ~ .menu-icon .hamburger:before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+#menu-toggle:checked ~ .menu-icon .hamburger:after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+/* Main Content - Flexbox Layout */
+main.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.main-content {
+    flex: 1 1 65%;
+    min-width: 300px;
+}
+
+.sidebar {
+    flex: 1 1 30%;
+    min-width: 300px;
+}
+
+section {
+    background-color: white;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #1e3a8a;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    border-bottom: 3px solid #3b82f6;
+    padding-bottom: 0.5rem;
+}
+
+h3 {
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* Speakers Section */
+.speaker-list {
+    list-style: none;
+}
+
+.speaker-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1.1rem;
+}
+
+.speaker-list li:last-child {
+    border-bottom: none;
+}
+
+.speaker-list a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.speaker-list a:hover {
+    text-decoration: underline;
+}
+
+/* Gift Section */
+.gift-section {
+    background-color: #f0f9ff;
+    border: 2px solid #3b82f6;
+}
+
+.gift-section p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.contact-info {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #3b82f6;
+}
+
+/* Lecture Notes */
+.lecture-notes article {
+    margin-bottom: 1rem;
+}
+
+/* Lecture Info */
+.lecture-info p {
+    font-size: 1.1rem;
+}
+
+/* Speaker Detail Page */
+.speaker-detail {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.speaker-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 3px solid #3b82f6;
+}
+
+.speaker-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #3b82f6;
+}
+
+.speaker-title h2 {
+    font-size: 2.5rem;
+    border: none;
+    padding: 0;
+    margin-bottom: 0.5rem;
+}
+
+.speaker-month {
+    font-size: 1.2rem;
+    color: #3b82f6;
+    font-weight: bold;
+}
+
+.speaker-bio,
+.lecture-description,
+.speaker-books,
+.lecture-details {
+    margin-bottom: 2rem;
+}
+
+.speaker-bio p,
+.lecture-description p,
+.lecture-details p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.speaker-books ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+.speaker-books li {
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.speaker-books li::before {
+    content: "📚 ";
+    margin-right: 0.5rem;
+}
+
+.back-link {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.back-link a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background-color: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    /* Hamburger Menu for Mobile */
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu-icon {
+        display: block;
+        align-self: flex-end;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #menu-toggle:checked ~ ul {
+        display: flex;
+    }
+
+    nav ul li {
+        width: 100%;
+    }
+
+    nav ul li a {
+        padding: 1rem;
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav ul li a.active {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 4px solid white;
+    }
+
+    /* Single column layout for narrow screens */
+    main.container {
+        flex-direction: column;
+    }
+
+    .main-content,
+    .sidebar {
+        flex: 1 1 100%;
+    }
+
+    .speaker-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .speaker-photo {
+        width: 150px;
+        height: 150px;
+    }
+}

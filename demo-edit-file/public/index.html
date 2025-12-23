@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giá Vàng Realtime - Cập Nhật Liên Tục</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        backdrop-filter: blur(10px);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .gold-icon {
+        font-size: 1.2em;
+      }
+
+      .timestamp {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 10px;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .status.online {
+        background: #4caf50;
+        color: white;
+      }
+
+      .status.offline {
+        background: #f44336;
+        color: white;
+      }
+
+      .data-section {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .data-row:last-child {
+        border-bottom: none;
+      }
+
+      .data-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 1em;
+      }
+
+      .data-value {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #b8860b;
+        text-align: right;
+      }
+
+      .exchange-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        margin-bottom: 20px;
+      }
+
+      .exchange-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .exchange-label {
+        font-size: 0.95em;
+        opacity: 0.9;
+      }
+
+      .exchange-value {
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+
+      .footer {
+        text-align: center;
+        color: #666;
+        font-size: 0.85em;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .error {
+        background: #f44336;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .trading-section {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .trading-section h3 {
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        text-align: center;
+      }
+
+      .trading-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .trading-row:last-child {
+        border-bottom: none;
+      }
+
+      .position-section {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .position-section h3 {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        text-align: center;
+      }
+
+      .analysis-section {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: white;
+      }
+
+      .analysis-section h3 {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        text-align: center;
+      }
+
+      .trade-history {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .trade-history h3 {
+        color: #333;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .trade-item {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 8px;
+        font-size: 0.9em;
+      }
+
+      .trade-item.profit {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+      }
+
+      .trade-item.loss {
+        background: #ffebee;
+        border-left: 4px solid #f44336;
+      }
+
+      .signal-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.9em;
+      }
+
+      .signal-badge.long {
+        background: #4caf50;
+      }
+
+      .signal-badge.short {
+        background: #f44336;
+      }
+
+      .signal-badge.wait {
+        background: #ff9800;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 1.5em;
+        }
+
+        .data-value {
+          font-size: 1.1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>
+          <span class="gold-icon">💰</span>
+          GIAO DỊCH VÀNG FUTURE
+        </h1>
+        <div class="status online pulse" id="status">🟢 Đang cập nhật</div>
+        <div class="timestamp" id="timestamp">Đang tải...</div>
+      </div>
+
+      <div id="content">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Đang tải dữ liệu giá vàng...</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let updateInterval;
+      let isOnline = true;
+
+      async function fetchGoldPrice() {
+        try {
+          const response = await fetch("/api/gold-price");
+          const data = await response.json();
+
+          if (data.success) {
+            updateDisplay(data);
+            setStatus(true);
+          } else {
+            showError(data.error || "Không thể lấy dữ liệu");
+            setStatus(false);
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+          showError("Lỗi kết nối đến server");
+          setStatus(false);
+        }
+      }
+
+      function updateDisplay(data) {
+        const content = document.getElementById("content");
+
+        const trading = data.trading || {};
+        const position = trading.currentPosition;
+        const analysis = trading.analysis || {};
+
+        let html = `
+          <div class="exchange-section">
+            <div class="exchange-row">
+              <span class="exchange-label">Tỉ giá USD/VND</span>
+              <span class="exchange-value">1 USD = ${data.exchangeRate}đ</span>
+            </div>
+          </div>
+
+          <div class="data-section">
+            <div class="data-row">
+              <span class="data-label">Giá vàng (USD/oz)</span>
+              <span class="data-value">$${data.priceUSD}</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Giá vàng (VND/chỉ)</span>
+              <span class="data-value">${data.priceVNDPerChi}đ</span>
+            </div>
+          </div>`;
+
+        // Trading account section
+        if (trading.capital !== undefined) {
+          const profitClass = trading.totalProfitLoss >= 0 ? "profit" : "loss";
+          html += `
+          <div class="trading-section">
+            <h3>💰 TÀI KHOẢN GIAO DỊCH</h3>
+            <div class="trading-row">
+              <span>Vốn hiện tại</span>
+              <span><strong>${trading.capital.toLocaleString(
+                "vi-VN"
+              )}đ</strong></span>
+            </div>
+            <div class="trading-row">
+              <span>Tổng lãi/lỗ</span>
+              <span><strong style="color: ${
+                trading.totalProfitLoss >= 0 ? "#4caf50" : "#f44336"
+              }">${
+            trading.totalProfitLoss >= 0 ? "+" : ""
+          }${trading.totalProfitLoss.toLocaleString("vi-VN")}đ (${
+            trading.profitLossPercent
+          }%)</strong></span>
+            </div>
+            <div class="trading-row">
+              <span>Margin khả dụng</span>
+              <span>${trading.marginAvailable.toLocaleString("vi-VN")}đ</span>
+            </div>
+            <div class="trading-row">
+              <span>Tổng lệnh</span>
+              <span>${trading.totalTrades} (Thắng: ${
+            trading.winTrades
+          } | Thua: ${trading.lossTrades})</span>
+            </div>
+            <div class="trading-row">
+              <span>Tỷ lệ thắng</span>
+              <span><strong>${trading.winRate}%</strong></span>
+            </div>
+          </div>`;
+        }
+
+        // Current position section
+        if (position) {
+          const unrealizedClass =
+            position.unrealizedPL >= 0 ? "profit" : "loss";
+          html += `
+          <div class="position-section">
+            <h3>📊 VỊ THẾ ĐANG MỞ: ${position.type}</h3>
+            <div class="trading-row">
+              <span>Giá vào</span>
+              <span><strong>${position.entryPrice.toLocaleString(
+                "vi-VN"
+              )}đ</strong></span>
+            </div>
+            <div class="trading-row">
+              <span>Margin</span>
+              <span>${position.margin.toLocaleString("vi-VN")}đ</span>
+            </div>
+            <div class="trading-row">
+              <span>Lãi/Lỗ chưa chốt</span>
+              <span><strong style="color: ${
+                position.unrealizedPL >= 0 ? "#4caf50" : "#f44336"
+              }">${
+            position.unrealizedPL >= 0 ? "+" : ""
+          }${position.unrealizedPL.toLocaleString("vi-VN")}đ</strong></span>
+            </div>
+            <div class="trading-row">
+              <span>Thời gian mở</span>
+              <span style="font-size: 0.85em">${position.openTime}</span>
+            </div>
+          </div>`;
+        }
+
+        // Analysis section
+        if (analysis.signal) {
+          const signalClass = analysis.signal.toLowerCase();
+          const signalIcon =
+            analysis.signal === "LONG"
+              ? "📈"
+              : analysis.signal === "SHORT"
+              ? "📉"
+              : "⏸️";
+          html += `
+          <div class="analysis-section">
+            <h3>🤖 PHÂN TÍCH THỊ TRƯỜNG</h3>
+            <div class="trading-row">
+              <span>Tín hiệu</span>
+              <span><span class="signal-badge ${signalClass}">${signalIcon} ${
+            analysis.signal
+          }</span></span>
+            </div>
+            <div class="trading-row">
+              <span>Độ tin cậy</span>
+              <span><strong>${analysis.confidence.toFixed(0)}%</strong></span>
+            </div>
+            <div class="trading-row" style="border: none">
+              <span style="font-size: 0.9em; opacity: 0.9" colspan="2">${
+                analysis.reason
+              }</span>
+            </div>`;
+
+          if (analysis.indicators && analysis.dataPoints >= 20) {
+            html += `
+            <div class="trading-row">
+              <span style="font-size: 0.85em">MA5 / MA10 / MA20</span>
+              <span style="font-size: 0.85em">${parseInt(
+                analysis.indicators.ma5
+              ).toLocaleString("vi-VN")} / ${parseInt(
+              analysis.indicators.ma10
+            ).toLocaleString("vi-VN")} / ${parseInt(
+              analysis.indicators.ma20
+            ).toLocaleString("vi-VN")}</span>
+            </div>
+            <div class="trading-row">
+              <span style="font-size: 0.85em">Momentum</span>
+              <span style="font-size: 0.85em">${
+                parseInt(analysis.indicators.momentum) >= 0 ? "+" : ""
+              }${parseInt(analysis.indicators.momentum).toLocaleString(
+              "vi-VN"
+            )}đ (${analysis.indicators.momentumPercent}%)</span>
+            </div>`;
+          } else {
+            html += `
+            <div class="trading-row">
+              <span style="font-size: 0.9em">Thu thập dữ liệu</span>
+              <span style="font-size: 0.9em">${analysis.dataPoints}/20 điểm</span>
+            </div>`;
+          }
+          html += `</div>`;
+        }
+
+        // Trade history section
+        if (trading.recentTrades && trading.recentTrades.length > 0) {
+          html += `
+          <div class="trade-history">
+            <h3>📜 LỊCH SỬ GIAO DỊCH GẦN NHẤT</h3>`;
+
+          trading.recentTrades.forEach((trade) => {
+            const tradeClass = trade.profitLoss >= 0 ? "profit" : "loss";
+            const icon = trade.profitLoss >= 0 ? "✅" : "❌";
+            html += `
+            <div class="trade-item ${tradeClass}">
+              ${icon} <strong>${trade.type}</strong> |
+              Vào: ${trade.entryPrice.toLocaleString("vi-VN")}đ →
+              Ra: ${trade.exitPrice.toLocaleString("vi-VN")}đ |
+              ${trade.profitLoss >= 0 ? "Lãi" : "Lỗ"}: <strong>${Math.abs(
+              trade.profitLoss
+            ).toLocaleString("vi-VN")}đ</strong>
+              <div style="font-size: 0.85em; margin-top: 3px; opacity: 0.8">${
+                trade.closeTime
+              }</div>
+            </div>`;
+          });
+
+          html += `</div>`;
+        }
+
+        html += `
+          <div class="footer">
+            ⏱️ Cập nhật giá: mỗi 5 giây | Giao dịch tự động: mỗi 60 giây<br />
+            📊 Chiến lược: Technical Analysis (Moving Average + Momentum)
+          </div>
+        `;
+
+        content.innerHTML = html;
+
+        document.getElementById(
+          "timestamp"
+        ).textContent = `Cập nhật lúc: ${data.timestamp}`;
+      }
+
+      function showError(message) {
+        const content = document.getElementById("content");
+        content.innerHTML = `
+          <div class="error">
+            <h2>⚠️ Lỗi</h2>
+            <p>${message}</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Đang thử kết nối lại...</p>
+          </div>
+        `;
+      }
+
+      function setStatus(online) {
+        const statusEl = document.getElementById("status");
+        if (online && !isOnline) {
+          statusEl.className = "status online pulse";
+          statusEl.textContent = "🟢 Đang cập nhật";
+          isOnline = true;
+        } else if (!online && isOnline) {
+          statusEl.className = "status offline";
+          statusEl.textContent = "🔴 Mất kết nối";
+          isOnline = false;
+        }
+      }
+
+      // Initial fetch
+      fetchGoldPrice();
+
+      // Update every 5 seconds
+      updateInterval = setInterval(fetchGoldPrice, 5000);
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", () => {
+        if (updateInterval) {
+          clearInterval(updateInterval);
+        }
+      });
+    </script>
+  </body>
+</html>
